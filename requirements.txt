@@ -6,3 +6,8 @@ pandas
 scikit-learn
 joblib
 pyarrow
+seaborn
+mrmr_selection
+matplotlib
+scipy 
+ipykernel

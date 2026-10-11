@@ -2,16 +2,16 @@ from pathlib import Path
 
 ROOT = Path(__file__).parent
 DATA_PATH = ROOT / "data" / "FacialTracking_Actors_01-24"
-PARQUET_PATH = ""
+PARQUET_PATH = ROOT / "data" / "Parquet" / "frame_table.parquet"
 SEED = 42
-TEST_ACTORS = ["01", "16", "17", "24"]
+TEST_ACTORS = [1, 16, 17, 24]
 EMOTIONS = {
-    "01": "neutral",
-    "02": "calm",
-    "03": "happy",
-    "04": "sad",
-    "05": "angry",
-    "06": "fearful",
-    "07": "disgust",
-    "08": "surprised"
+    1: "neutral",
+    2: "calm",
+    3: "happy",
+    4: "sad",
+    5: "angry",
+    6: "fearful",
+    7: "disgust",
+    8: "surprised"
 }
