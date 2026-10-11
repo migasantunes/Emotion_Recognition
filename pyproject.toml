@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "emotion-recognition"
+version = "0.1.0"
+dependencies = [
+    "numpy",
+    "pandas",
+    "pyarrow",
+    "scipy",
+    "matplotlib",
+    "seaborn",
+    "scikit-learn",
+    "mrmr_selection",
+    "joblib",
+    "ipykernel",
+    "gradio>=4.44",
+    "mediapipe",
+    "opencv-python",
+]
+
+
+[tool.setuptools]
+packages = ["src"]
+py-modules = ["config"]
