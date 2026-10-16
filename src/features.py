@@ -9,6 +9,12 @@ def euclidean_distance(df, a, b):
 
     return pd.Series(np.sqrt(np.square(x_a - x_b) + np.square(y_a - y_b)), index=df.index)
 
+"""
+Before this measures method version, I had one using numpy with one loop per eye and brow,
+passing the collumns to a numpy float array and calculating the mean of the 6 or 5 points.
+It was a lot faster than the current one, around 5 times faster, but it wasn't as readable and 
+was using loops, which is not the best practice in pandas. So I decided to change it to this version.
+"""
 def measures(df):
     mouth_vertical_mean = df[["y_51", "y_57"]].mean(axis=1)
     mouth_corner_mean = df[["y_48", "y_54"]].mean(axis=1)
