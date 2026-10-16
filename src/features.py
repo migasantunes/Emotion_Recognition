@@ -10,24 +10,18 @@ def euclidean_distance(df, a, b):
     return pd.Series(np.sqrt(np.square(x_a - x_b) + np.square(y_a - y_b)), index=df.index)
 
 def measures(df):
-    mouth_vertical_mean = (df["y_51"].to_numpy(dtype=float) + df["y_57"].to_numpy(dtype=float)) / 2
-    mouth_corner_mean = (df["y_48"].to_numpy(dtype=float) + df["y_54"].to_numpy(dtype=float)) / 2
+    mouth_vertical_mean = df[["y_51", "y_57"]].mean(axis=1)
+    mouth_corner_mean = df[["y_48", "y_54"]].mean(axis=1)
+
     M3 = mouth_vertical_mean - mouth_corner_mean
 
-    left_eye_height = np.zeros(df.shape[0]) # Actors Right Eye
-    right_eye_height = np.zeros(df.shape[0]) # Actors Left Eye
-    for i in range(6):
-        left_eye_height += df[f"y_{36 + i}"].to_numpy(dtype=float)
-        right_eye_height += df[f"y_{42 + i}"].to_numpy(dtype=float)
+    left_eye_height = df[[f"y_{36 + i}" for i in range(6)]].mean(axis=1) # Actors Right Eye
+    right_eye_height = df[[f"y_{42 + i}" for i in range(6)]].mean(axis=1) # Actors Left Eye
+    left_brow_height = df[[f"y_{17 + i}" for i in range(5)]].mean(axis=1) # Actors Right Brow
+    right_brow_height = df[[f"y_{22 + i}" for i in range(5)]].mean(axis=1) # Actors Left Brow
 
-    left_brow_height = np.zeros(df.shape[0]) # Actors Right Brow
-    right_brow_height = np.zeros(df.shape[0]) # Actors Left Brow
-    for i in range(5):
-        left_brow_height += df[f"y_{17 + i}"].to_numpy(dtype=float)
-        right_brow_height += df[f"y_{22 + i}"].to_numpy(dtype=float)
-
-    M4 = (left_eye_height / 6 - left_brow_height / 5 + 
-          right_eye_height / 6 - right_brow_height / 5) / 2
+    M4 = (left_eye_height - left_brow_height + 
+          right_eye_height - right_brow_height) / 2
     
     M5 = (euclidean_distance(df, 37, 41) + 
           euclidean_distance(df, 38, 40) + 
@@ -53,14 +47,14 @@ def video_features(video_df):
     final_measures = final_measures.stack()
     final_measures.index = final_measures.index.map("_".join)
 
-    final_measures = pd.concat([final_measures, own_video_features(video_df)], axis=1)
+    final_measures = pd.concat([final_measures, own_video_features(video_df)])
 
     return final_measures
 
 def own_video_features(video_df): # If needed, add measures_df
 
-    return pd.DataFrame({})
+    return pd.Series(dtype=float)
 
 def build_feature_table(df):
 
-    return df.groupby("video_id").apply(video_features)
+    return df.groupby(["video_id", "actor", "emotion"]).apply(video_features)
