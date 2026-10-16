@@ -1,4 +1,5 @@
 import numpy as np
+from sklearn.cluster import DBSCAN, KMeans
 
 # X: frames x coordinates, statistics computed per column (one coordinate at a time)
 # returns a boolean matrix with the same shape, True = flagged
@@ -23,3 +24,29 @@ def zscore_flags(X, k):
     z = np.divide(X - mu, sigma, out=np.zeros_like(X), where=sigma > 0)
 
     return np.abs(z) > k
+
+#k-means
+# returns the flags and the cluster of each frame
+def kmeans_flags(X, k, seed):
+    X = np.asarray(X, dtype=float)
+
+    km = KMeans(n_clusters=k, n_init=10, random_state=seed).fit(X)
+    labels = km.labels_ # cluster of each frame
+    dist = np.linalg.norm(X - km.cluster_centers_[labels], axis=1) # distance to its own centroid
+
+    flags = np.zeros(len(X), dtype=bool)
+    for c in range(k):
+        in_c = labels == c # frames of cluster c
+        d = dist[in_c]
+        flags[in_c] = d > d.mean() + 3 * d.std() # threshold within the cluster
+
+    return flags, labels
+
+# DBSCAN on X (frames x coordinates); noise points (label = -1) are flagged
+# returns the flags and the cluster of each frame
+def dbscan_flags(X, eps, min_samples=4):
+    X = np.asarray(X, dtype=float)
+
+    labels = DBSCAN(eps=eps, min_samples=min_samples).fit(X).labels_ # -1 = noise
+
+    return labels == -1, labels
