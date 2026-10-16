@@ -50,3 +50,20 @@ def dbscan_flags(X, eps, min_samples=4):
     labels = DBSCAN(eps=eps, min_samples=min_samples).fit(X).labels_ # -1 = noise
 
     return labels == -1, labels
+
+# injection of artificial outliers (2.5)
+# replaces a fraction of x by mu + s*k*sigma + q; x itself is not changed
+# returns the contaminated copy and the positions replaced
+def inject_outliers(x, rate, k, rng):
+    x = np.asarray(x, dtype=float)
+    mu, sigma = x.mean(), x.std() # before the injection
+
+    n_out = round(rate * len(x)) # how many samples to replace
+    pos = rng.choice(len(x), size=n_out, replace=False) # distinct positions
+    s = rng.choice([-1, 1], size=n_out) # side, equal probability
+    q = rng.uniform(0, sigma, size=n_out) # in [0, sigma)
+
+    x_c = x.copy()
+    x_c[pos] = mu + s * k * sigma + q
+
+    return x_c, pos

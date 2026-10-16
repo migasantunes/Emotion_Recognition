@@ -19,7 +19,7 @@ def normalise_d(df):
     df_n[X_COLS] = (x - x[:, [27]]) / d[:, None] # broadcasting d
     df_n[Y_COLS] = (y - y[:, [27]]) / d[:, None] # same here
 
-    return df_n
+    return df_n.copy()
 
 # x′k = (xk − x27) / w
 # y′k = (yk − y27) / h
@@ -33,4 +33,4 @@ def normalise_image(df, w=1280, h=720):
     df_n[X_COLS] = (x - x[:, [27]]) / w
     df_n[Y_COLS] = (y - y[:, [27]]) / h
 
-    return df_n
+    return df_n.copy()
