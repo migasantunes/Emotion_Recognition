@@ -26,8 +26,8 @@ def measures(df):
         left_brow_height += df[f"y_{17 + i}"].to_numpy(dtype=float)
         right_brow_height += df[f"y_{22 + i}"].to_numpy(dtype=float)
 
-    M4 = (left_eye_height / 5 - left_brow_height / 6 + 
-          right_eye_height / 5 - right_brow_height / 6) / 2
+    M4 = (left_eye_height / 6 - left_brow_height / 5 + 
+          right_eye_height / 6 - right_brow_height / 5) / 2
     
     M5 = (euclidean_distance(df, 37, 41) + 
           euclidean_distance(df, 38, 40) + 
@@ -50,14 +50,14 @@ def video_features(video_df):
                                    "vel": measures_df.diff().abs().mean(),
                                    "energy": measures_df.diff().pow(2).mean()})
 
-    final_measures = pd.concat([final_measures, own_video_features(measures_df)], axis=1)
-
     final_measures = final_measures.stack()
     final_measures.index = final_measures.index.map("_".join)
 
+    final_measures = pd.concat([final_measures, own_video_features(video_df)], axis=1)
+
     return final_measures
 
-def own_video_features(mesures_df):
+def own_video_features(video_df): # If needed, add measures_df
 
     return pd.DataFrame({})
 
