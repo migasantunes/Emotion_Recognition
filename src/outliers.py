@@ -67,3 +67,14 @@ def inject_outliers(x, rate, k, rng):
     x_c[pos] = mu + s * k * sigma + q
 
     return x_c, pos
+
+# recall and precision of a detector against the known positions
+# flags, truth: True/False per frame (flagged / injected)
+def detection_scores(flags, truth):
+    flags, truth = np.asarray(flags, bool), np.asarray(truth, bool)
+    tp = (flags & truth).sum() # flagged and injected
+    fp = (flags & ~truth).sum() # flagged, not injected
+    fn = (~flags & truth).sum() # injected, not flagged
+    return {"flagged": flags.sum(), "TP": tp, "FP": fp, "FN": fn,
+            "recall": tp / (tp + fn),
+            "precision": tp / (tp + fp) if tp + fp else np.nan} # nan if nothing flagged
