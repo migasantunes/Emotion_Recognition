@@ -78,3 +78,16 @@ def detection_scores(flags, truth):
     return {"flagged": flags.sum(), "TP": tp, "FP": fp, "FN": fn,
             "recall": tp / (tp + fn),
             "precision": tp / (tp + fp) if tp + fp else np.nan} # nan if nothing flagged
+
+# robust centre and spread (2.7): median and MAD (median absolute deviation)
+def median_mad(r):
+    r = np.asarray(r, dtype=float)
+    med = np.median(r)
+    mad = np.median(np.abs(r - med)) # median of the distances to the median
+    return med, mad
+
+# modified z-score (2.7): median and MAD instead of mean and std
+def modified_z(r):
+    r = np.asarray(r, dtype=float)
+    med, mad = median_mad(r)
+    return 0.6745 * (r - med) / mad
