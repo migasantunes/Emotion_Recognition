@@ -57,8 +57,8 @@ def own_measures(df):
     higher_lip = df[[f"y_{49 + i}" for i in range(5)]].mean(axis=1)
     M10 = higher_lip - lower_nose
 
-    left_brow_arch = df[["y_17", "y_21"]].mean(axis=1) - df["y_19"]
-    right_brow_arch = df[["y_22", "y_26"]].mean(axis=1) - df["y_24"]
+    left_brow_arch = df[["y_17", "y_21"]].mean(axis=1) - df["y_19"] # Actor's right
+    right_brow_arch = df[["y_22", "y_26"]].mean(axis=1) - df["y_24"] # Actor's left
     M11 = (left_brow_arch + right_brow_arch) / 2
 
     return pd.DataFrame({"own_M7": M7,
@@ -67,7 +67,7 @@ def own_measures(df):
                          "own_M10": M10,
                          "own_M11": M11})
 
-def video_features(video_df, own):
+def video_features(video_df, own=True):
     if own:
         measures_df = pd.concat([measures(video_df), own_measures(video_df)], axis=1)
     else:
