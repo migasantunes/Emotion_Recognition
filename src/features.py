@@ -44,7 +44,7 @@ def measures(df):
 def own_measures(df):
     mouth_eye_left_corners = euclidean_distance(df, 48, 36) # Actor's right
     mouth_eye_right_corners = euclidean_distance(df, 54, 45) # Actor's left
-    M7 = mouth_eye_left_corners + mouth_eye_right_corners / 2
+    M7 = (mouth_eye_left_corners + mouth_eye_right_corners) / 2
 
     lower_lip = df[[f"y_{55 + i}" for i in range(5)]].mean(axis=1)
     lower_nose = df[[f"y_{31 + i}" for i in range(5)]].mean(axis=1)
@@ -60,7 +60,7 @@ def own_measures(df):
 
     inner_height_left_brow = df[["y_17", "y_21"]].mean(axis=1) - df["y_19"]
     inner_height_right_brow = df[["y_22", "y_26"]].mean(axis=1) - df["y_24"]
-    M11 = inner_height_left_brow + inner_height_right_brow / 2
+    M11 = (inner_height_left_brow + inner_height_right_brow) / 2
 
     return pd.DataFrame({"M7": M7,
                          "M8": M8,
@@ -69,7 +69,7 @@ def own_measures(df):
                          "M11": M11})
 
 def video_features(video_df):
-    measures_df = pd.concat(measures(video_df), own_measures(video_df))
+    measures_df = pd.concat([measures(video_df), own_measures(video_df)], axis=1)
 
     final_measures = pd.DataFrame({"mean": measures_df.mean(),
                                    "std": measures_df.std(ddof=0),
