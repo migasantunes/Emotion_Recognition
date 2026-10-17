@@ -55,21 +55,23 @@ def own_measures(df):
     M9 = inner_ends_brow_height - outer_ends_brow_height
 
     higher_lip = df[[f"y_{49 + i}" for i in range(5)]].mean(axis=1)
-    lower_nose = df[[f"y_{31 + i}" for i in range(5)]].mean(axis=1)
     M10 = higher_lip - lower_nose
 
-    inner_height_left_brow = df[["y_17", "y_21"]].mean(axis=1) - df["y_19"]
-    inner_height_right_brow = df[["y_22", "y_26"]].mean(axis=1) - df["y_24"]
-    M11 = (inner_height_left_brow + inner_height_right_brow) / 2
+    left_brow_arch = df[["y_17", "y_21"]].mean(axis=1) - df["y_19"]
+    right_brow_arch = df[["y_22", "y_26"]].mean(axis=1) - df["y_24"]
+    M11 = (left_brow_arch + right_brow_arch) / 2
 
-    return pd.DataFrame({"M7": M7,
-                         "M8": M8,
-                         "M9": M9,
-                         "M10": M10,
-                         "M11": M11})
+    return pd.DataFrame({"own_M7": M7,
+                         "own_M8": M8,
+                         "own_M9": M9,
+                         "own_M10": M10,
+                         "own_M11": M11})
 
-def video_features(video_df):
-    measures_df = pd.concat([measures(video_df), own_measures(video_df)], axis=1)
+def video_features(video_df, own):
+    if own:
+        measures_df = pd.concat([measures(video_df), own_measures(video_df)], axis=1)
+    else:
+        measures_df = measures(video_df)
 
     final_measures = pd.DataFrame({"mean": measures_df.mean(),
                                    "std": measures_df.std(ddof=0),
@@ -82,6 +84,5 @@ def video_features(video_df):
 
     return final_measures
 
-def build_feature_table(df):
-
-    return df.groupby(["video_id", "actor", "emotion"]).apply(video_features)
+def build_feature_table(df, own=True):
+    return df.groupby(["video_id", "actor", "emotion"]).apply(video_features, own=own)
