@@ -91,3 +91,10 @@ def modified_z(r):
     r = np.asarray(r, dtype=float)
     med, mad = median_mad(r)
     return 0.6745 * (r - med) / mad
+
+# replace flagged frames by linear interpolation within each video (rows sorted by frame)
+# at the start or end of a video, the nearest valid value is copied
+def interpolate_flags(df, col, flags):
+    s = df[col].mask(flags) # flagged -> NaN
+    return s.groupby(df["video_id"]).transform(
+        lambda v: v.interpolate(method="linear", limit_direction="both"))
