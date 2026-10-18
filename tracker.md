@@ -1,5 +1,25 @@
+# Own Features
+>< = smaller, less \
+>\> = bigger, more \
+> y1-y5 = y1 to y5
+
+M7: Mouth corner to eye corner | Happy | (euc_dist(48,36) + euc_dist(54,45))/2, <value = >Happy\
+M8: Lower Lip closer to Lower Nose | Sad | mean(y55-y59) - mean(y31-y35), <value = >Sad\
+M9: Brow slope | Angry | mean(y21,y22) - mean(y17, y26), >value = >Angry\
+M10: Higher Lip closer to Lower Nose | Disgust | mean(y49-y53) - mean(y31-y35), <value= >disgusted\
+M11: Brow shape | Surprised or fearful | mean hight between brow extremeties minus the hight of themid point of the brow, averaging with both brows, mean(y17, y21) − y19
+/>value = >round = >surprised | <value = >flat = >fearful. Points used: 17, 19, 21, 22, 24, 26. \
+Suprised has round brows, Fearful has flat brows
+
+### References:
+Disgusted: https://www.youtube.com/watch?v=HRmbY6R0KK4 \
+Surprised or fearful: https://www.youtube.com/watch?v=5V-AQjLyJ7k 
+
 # AI Use
 - Helped create the plan used to complete the project, in order to have a clear view and organized work devition between the team members.
+- Used for code quality review, to check for errors and suggest improvements.
+- Used for brainstorming for the measures M7 and M9.
+- LaTeX formatting for the measure formulas inside the table in the notebook.
 
 ># IMPORTANT: 
 >### The app must run standalone with python app.py and import its modules from its own folder. For the same reason, keep normalise.py and features.py free of import config, or they break when copied into app/.
