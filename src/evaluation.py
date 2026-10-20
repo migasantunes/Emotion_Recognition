@@ -26,7 +26,7 @@ def evaluation(X, y, cv, pipeline, groups=None):
         y_true_all.append(y[test_idx])
 
         accuracy = accuracy_score(y[test_idx], y_pred)
-        f1 = f1_score(y[test_idx], y_pred, average="macro")
+        f1 = f1_score(y[test_idx], y_pred, average="macro", labels=labels)
 
         actor = None
         if groups is not None:
