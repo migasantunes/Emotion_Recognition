@@ -15,3 +15,5 @@ EMOTIONS = {
     7: "disgust",
     8: "surprised"
 }
+C_GRID = [0.01, 0.1, 1, 10, 100, 1000]
+C_FIXED = 1
