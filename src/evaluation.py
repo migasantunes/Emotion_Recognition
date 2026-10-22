@@ -90,6 +90,4 @@ def nested_evaluation(X, y, groups, pipeline, param_grid, inner_cv, inner_groups
 
     per_fold_results = pd.DataFrame(per_fold_results)
 
-    conf_matrix = confusion_matrix(predictions["y_true"], predictions["y_pred"], labels=labels)
-
-    return per_fold_results, predictions, conf_matrix
+    return per_fold_results, predictions
