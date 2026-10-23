@@ -1,8 +1,9 @@
-from sklearn.base import clone
-from sklearn.metrics import f1_score, confusion_matrix, accuracy_score
-from sklearn.model_selection import GridSearchCV, LeaveOneGroupOut
 import numpy as np
 import pandas as pd
+from sklearn.base import clone, BaseEstimator, TransformerMixin
+from sklearn.metrics import f1_score, confusion_matrix, accuracy_score
+from sklearn.model_selection import GridSearchCV, LeaveOneGroupOut
+from mrmr import mrmr_classif
 
 def evaluation(X, y, cv, pipeline, groups=None):
     '''
@@ -91,3 +92,27 @@ def nested_evaluation(X, y, groups, pipeline, param_grid, inner_cv, inner_groups
     per_fold_results = pd.DataFrame(per_fold_results)
 
     return per_fold_results, predictions
+
+class MRMRSelector(TransformerMixin, BaseEstimator):
+    '''
+    mrmr_classif wrapped as a scikit-learn transformer, so the selection is fitted
+    inside the pipeline, on the training actors of each fold only.
+    '''
+    def __init__(self, K=10):
+        self.K = K
+
+    def fit(self, X, y):
+        X = pd.DataFrame(np.asarray(X))  # columns named 0..n-1, so mrmr returns column indices
+        self.selected_ = np.array(mrmr_classif(X=X, y=pd.Series(y), K=self.K, show_progress=False, n_jobs=1))
+        self.n_features_in_ = X.shape[1]
+        return self
+
+    def transform(self, X):
+        return np.asarray(X)[:, self.selected_]
+
+    def get_support(self, indices=False):
+        if indices:
+            return self.selected_
+        mask = np.zeros(self.n_features_in_, dtype=bool)
+        mask[self.selected_] = True
+        return mask
