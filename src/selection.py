@@ -15,6 +15,9 @@ def measure_of(feature_name):
     # "M1_mean" -> "M1", "own_M7_vel" -> "own_M7"
     return feature_name.rsplit("_", 1)[0]
 
+def statistic_of(feature_name):
+    # "M1_mean" -> "mean", "own_M7_vel" -> "vel"
+    return feature_name.rsplit("_", 1)[1]
 
 def loadings_by_measure(pca, feature_names, n_components=2):
     # share of each component that comes from each measure:
