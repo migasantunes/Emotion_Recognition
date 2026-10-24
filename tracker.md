@@ -74,12 +74,5 @@ M11: Brow shape | Surprised or fearful | mean hight between brow extremeties min
 ## AI Use
 - Helped create the plan used to complete the project, in order to have a clear view and organized work devition between the team members.
 - Used for code quality review, to check for errors and suggest improvements.
-- Q2.2: helped design and explain `outliers.py`.
-- Q2.3: helped design and explain the tables and figures.
-- Q2.4: helped design and explain `kmeans_flags`, `dbscan_flags` and the comparison tables and figures.
-- Q2.5: helped design and explain `inject_outliers` and the check table and histogram.
-- Q2.6: helped design and explain `detection_scores`, the detection tables and histogram.
-- Q2.7: explained the regression and the modified z-score; helped design `median_mad`, `modified_z`, the tables and the scatter plot.
-- Q2.8: helped design and explain `interpolate_flags`, the three replacements, the MAE and summary tables and the figure.
 - Used for brainstorming for the measures M7 and M9.
 - LaTeX formatting for the measure formulas inside the table in the notebook.
