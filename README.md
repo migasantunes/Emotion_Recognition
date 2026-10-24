@@ -1,68 +1,46 @@
-# IML project: the application
+# Recognising emotion from facial landmark trajectories
 
-A web page that records a short clip with the computer's camera, extracts the 68
-facial landmarks of every frame and shows the emotion predicted by **your** pipeline.
+Introduction to Machine Learning, 2026/2027 · group 2023210870, 2023211288
 
-```
-app.py            the web application (do not change)
-landmarks.py      landmark extraction with MediaPipe, 68 points, 30 fps (do not change)
-classifier.py     YOUR pipeline: load_model() and predict(model, frames)
-requirements.txt  the packages needed
-```
-
-## Install and run
+The report is the six notebooks in `notebooks/`, executed with their outputs, with an HTML export of each.
+The answers are in Markdown cells under the number of each question.
 
 ```
-python -m venv .venv
-source .venv/bin/activate          # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
+config.py        paths (DATA_PATH, PARQUET_PATH), SEED, test actors, emotions, C grid, C_FIXED
+src/             the code used by the notebooks: loading, normalisation, features, outliers, plotting, evaluation, selection
+notebooks/       01_data (Q1), 02_quality (Q2), 03_features (Q3), 04_evaluation (Q4),
+                 05_selection_test (Q5), 06_deployment_7_Answer (Q6 and Q7)
+recordings/      the landmarks of our 16 clips recorded with the application (6.2), and two screenshots
+app/             the application: classifier.py, model.joblib and the modules it imports (app/src)
+requirements.txt the packages used and their versions (Python 3.12)
+```
+
+## Running the notebooks
+
+1. Create an environment with Python 3.12 and install the packages and the project itself, so that the notebooks can import `config` and `src`:
+
+   ```
+   python -m venv .venv
+   source .venv/bin/activate          # Windows: .venv\Scripts\activate
+   pip install -r requirements.txt
+   pip install -e .
+   ```
+
+2. Download `FacialTracking_Actors_01-24.zip` from https://doi.org/10.5281/zenodo.3255102 and extract it to `data/FacialTracking_Actors_01-24/`. The data are not included. The path is set in `DATA_PATH` in `config.py`.
+
+3. Run the notebooks in order, from 01 to 06. The first call to `load_frames` reads the CSV files and saves the frame table to `data/Parquet/frame_table.parquet`. Later calls read that file. Notebook 06 fits the final model on the 1440 videos and saves it to `app/model.joblib`.
+
+All random seeds are taken from `SEED` in `config.py`.
+
+## Running the application
+
+```
+cd app
 python app.py
 ```
 
-Open the address printed in the terminal (by default http://127.0.0.1:7860), allow
-the browser to use the camera, record a clip of 3 to 5 seconds facing the camera, and
-press **Classify**. A video file can be uploaded instead of recording one, which is
-also the way to test the application on a computer without a camera.
+See `app/README.md` for the details.
 
-Everything runs on your computer: the clips are not sent anywhere.
+## Use of AI
 
-## What to change
-
-Only `classifier.py`. Implement:
-
-* `load_model()`, called once when the application starts. Load the pipeline you
-  fitted on the dataset, for example with `joblib.load("model.joblib")`.
-* `predict(model, frames)`, called for every clip. `frames` is a pandas DataFrame in
-  the format of the CSV files of the dataset, one row per frame:
-  `frame, timestamp, confidence, x_0 ... x_67, y_0 ... y_67`. Return a dict with the
-  probability of each of the eight emotions.
-
-Put your saved model and your own Python modules in this folder and import them in
-`classifier.py`. The features must be computed with the same code used for training,
-not with a copy rewritten for the application.
-
-## What the application does to the clip
-
-1. Reads every frame of the clip.
-2. Finds one face per frame with MediaPipe and keeps 68 of its points, mapped to the
-   numbering of Figure 2 of the brief (`MP68` in `landmarks.py`). Frames without a
-   face are skipped.
-3. Converts the points to pixels, with the origin at the top-left corner and y
-   increasing downwards, as in the dataset. They are **not** normalised.
-4. Resamples every coordinate to 30 frames per second by linear interpolation in
-   time, as in the dataset. `confidence` is set to 1.
-5. Calls `predict` and shows the probabilities, the landmarks of the middle frame,
-   and the table of landmarks as a CSV file that can be downloaded.
-
-## MediaPipe versions
-
-* With `mediapipe` 0.10.14 or older, the Face Mesh model installed with the package
-  is used.
-* With newer versions, the Face Landmarker model is downloaded once, at the first
-  run, to `models/face_landmarker.task`. If the download fails, get the file from
-  https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task
-  and put it in `models/`.
-
-Tested with Python 3.10, mediapipe 0.10.14, gradio 6.29 and OpenCV 4.11. If the
-installation fails with a recent version of Python, create the environment with
-Python 3.10 to 3.12 and install `mediapipe==0.10.14`.
+We used AI assistants as a support tool during the project. They helped us plan the work and divide it between the two members. They explained concepts and methods, such as the regression and the modified z-score of 2.7, and helped design some functions of `src/` and some tables and figures. They reviewed the code for errors and suggested improvements. We also used them for brainstorming the own measures M7 and M9, for the LaTeX of the formulas in the table of 3.2, and for a final review of the notebooks against the brief before delivery.

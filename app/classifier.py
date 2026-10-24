@@ -15,7 +15,6 @@ NOT normalised: apply the same normalisation and compute the features with the s
 code that was used for training, imported from your own modules, not rewritten here.
 
 `predict` returns a dict with one probability per emotion, in the order of EMOTIONS.
-The placeholder below returns the same probability for every emotion.
 """
 import os
 import joblib
@@ -30,7 +29,7 @@ MODEL_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "model.job
 
 
 def load_model():
-    """Load the pipeline of 5.6, fitted on the 1440 videos in 06_deployment.ipynb."""
+    """Load the pipeline of 5.6, fitted on the 1440 videos in 06_deployment_7_Answer.ipynb."""
     return joblib.load(MODEL_PATH)
 
 

@@ -1,13 +1,14 @@
-gradio>=4.44
-mediapipe
-opencv-python
-numpy
-pandas
-scikit-learn
-joblib
-pyarrow
-seaborn
-mrmr_selection
-matplotlib
-scipy 
-ipykernel
+# Python 3.12.12
+gradio==6.30.0
+mediapipe==1.1.0
+opencv-python==5.0.0.93
+numpy==2.5.4
+pandas==3.0.6
+scikit-learn==1.9.1
+joblib==1.6.0
+pyarrow==26.0.0
+seaborn==0.13.2
+mrmr_selection==0.2.8
+matplotlib==3.11.2
+scipy==1.18.1
+ipykernel==7.4.0
