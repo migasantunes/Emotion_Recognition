@@ -17,21 +17,31 @@ code that was used for training, imported from your own modules, not rewritten h
 `predict` returns a dict with one probability per emotion, in the order of EMOTIONS.
 The placeholder below returns the same probability for every emotion.
 """
+import os
+import joblib
 import numpy as np
 import pandas as pd
 
+from src.normalise import normalise_d
+from src.features import video_features
+
 EMOTIONS = ["neutral", "calm", "happy", "sad", "angry", "fearful", "disgust", "surprised"]
+MODEL_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "model.joblib")
 
 
 def load_model():
-    """Load and return the fitted pipeline, for example with joblib.load("model.joblib")."""
-    return None
+    """Load the pipeline of 5.6, fitted on the 1440 videos in 06_deployment.ipynb."""
+    return joblib.load(MODEL_PATH)
 
 
 def predict(model, frames: pd.DataFrame) -> dict:
     """Return {emotion: probability} for one recording."""
-    # 1. normalise the coordinates and compute the features of this recording (one row)
-    # 2. probabilities = model.predict_proba(features)[0]
-    # 3. return dict(zip(EMOTIONS, probabilities)), in the order of model.classes_
-    probabilities = np.full(len(EMOTIONS), 1.0 / len(EMOTIONS))
-    return dict(zip(EMOTIONS, probabilities))
+    frames_n = normalise_d(frames)                          # pixels -> units of d, as in training
+    features = video_features(frames_n).to_frame().T        # one row, the 55 features
+    probabilities = model.predict_proba(features)[0]
+
+    # model.classes_ are the emotion codes 1..8
+    result = {}
+    for code, p in zip(model.classes_, probabilities):
+        result[EMOTIONS[code - 1]] = p
+    return result
